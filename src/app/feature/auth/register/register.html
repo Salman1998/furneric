@@ -1,0 +1,194 @@
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="text-center text-3xl font-bold text-gray-900">Create your account</h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Already have an account?
+      <a
+        routerLink="/auth/login"
+        class="font-medium text-blue-600 hover:text-blue-500"
+        >Sign in</a
+      >
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate class="space-y-6">
+        <!-- Name fields -->
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <!-- First Name -->
+          <div>
+            <label for="firstName" class="block text-sm font-medium text-gray-700">First name</label>
+            <div class="mt-1 relative">
+              <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
+              <input
+                formControlName="firstName"
+                type="text"
+                id="firstName"
+                placeholder="John"
+                class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400"
+              />
+            </div>
+            
+            @if (f.firstName.touched && f.firstName.invalid) {
+              <p class="text-sm text-red-600 mt-1"> First name is required.
+            </p>
+            }
+          </div>
+
+          <!-- Last Name -->
+          <div>
+            <label for="lastName" class="block text-sm font-medium text-gray-700">Last name</label>
+            <div class="mt-1 relative">
+              <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
+              <input
+                formControlName="lastName"
+                type="text"
+                id="lastName"
+                placeholder="Doe"
+                class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400"
+              />
+            </div>
+            @if (f.lastName.touched && f.lastName.invalid) {
+              <p class="text-sm text-red-600 mt-1">Last name is required.</p>
+            }
+            
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+          <div class="mt-1 relative">
+            <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
+            <input
+              formControlName="email"
+              type="email"
+              id="email"
+              placeholder="you@example.com"
+              class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400"
+            />
+          </div>
+          @if (f.email.touched && f.email.errors?.['required']) {
+            <p class="text-sm text-red-600 mt-1">Email is required.</p>
+          }
+          
+          @if (f.email.touched && f.email.errors?.['email']) {
+            <p class="text-sm text-red-600 mt-1">Please enter a valid email.</p>
+          }
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <div class="mt-1 relative">
+            <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
+            <input
+              [type]="passwordVisible ? 'text' : 'password'"
+              formControlName="password"
+              id="password"
+              placeholder="••••••••"
+              class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400"
+            />
+            <i
+              class="fas absolute right-3 top-3 cursor-pointer"
+              [ngClass]="passwordVisible ? 'fa-eye-slash text-gray-600' : 'fa-eye text-gray-400'"
+              (click)="togglePasswordVisibility('password')"
+            ></i>
+          </div>
+          @if (f.password.touched && f.password.errors?.['required']) {
+            <p class="text-sm text-red-600 mt-1">Password is required.</p>
+          }
+          @if (f.password.touched && f.password.errors?.['minlength']) {
+            <p class="text-sm text-red-600 mt-1">Password must be at least 6 characters long.</p>
+          }
+          
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <div class="mt-1 relative">
+            <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
+            <input
+              [type]="confirmPasswordVisible ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              id="confirmPassword"
+              placeholder="••••••••"
+              class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400"
+            />
+            <i
+              class="fas absolute right-3 top-3 cursor-pointer"
+              [ngClass]="confirmPasswordVisible ? 'fa-eye-slash text-gray-600' : 'fa-eye text-gray-400'"
+              (click)="togglePasswordVisibility('confirmPassword')"
+            ></i>
+          </div>
+          @if (registerForm.errors?.['mismatch'] && f.confirmPassword.touched) {
+            <p class="text-sm text-red-600 mt-1">Passwords do not match.</p>
+          }
+          
+        </div>
+
+        <!-- Terms Checkbox -->
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            formControlName="agreeTerms"
+            id="agreeTerms"
+            class="h-4 w-4 text-blue-600"
+          />
+          <label for="agreeTerms" class="ml-2 text-sm">
+            I agree to the <a class="text-blue-600" routerLink="/terms-and-condistion">Terms and Conditions</a>
+          </label>
+        </div>
+        @if (f.agreeTerms.touched && f.agreeTerms.errors?.['requiredTrue']) {
+          <p class="text-sm text-red-600 mt-1"> You must agree before creating an account.</p>
+        }
+        
+
+        <!-- Error Message -->
+         @if (errorMessage) {
+          <div class="text-red-600 text-sm text-center">
+            {{ errorMessage }}
+          </div>
+         }
+        
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="isSubmitting"
+          class="w-full bg-blue-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 disabled:opacity-50"
+        >
+        @if (!isSubmitting) {<span>Create Account</span>}
+
+         @if(isSubmitting) {
+            <span class="flex items-center justify-center">
+              <svg
+                class="animate-spin h-5 w-5 mr-2 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+              Creating...
+            </span>
+          }
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
