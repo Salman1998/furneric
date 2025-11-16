@@ -20,8 +20,7 @@ interface RegisterForm {
   styleUrl: './register.css',
 })
 export class Register {
-
-private fb = inject(FormBuilder);
+  private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
@@ -32,14 +31,17 @@ private fb = inject(FormBuilder);
   confirmPasswordVisible = false;
 
   constructor() {
-    this.registerForm = this.fb.group({
-      firstName: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
-      lastName: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
-      email: this.fb.control('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-      password: this.fb.control('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
-      confirmPassword: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
-      agreeTerms: this.fb.control(false, { nonNullable: true, validators: [Validators.requiredTrue] }),
-    });
+    this.registerForm = this.fb.group(
+      {
+        firstName: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
+        lastName: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
+        email: this.fb.control('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+        password: this.fb.control('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
+        confirmPassword: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
+        agreeTerms: this.fb.control(false, { nonNullable: true, validators: [Validators.requiredTrue] }),
+      },
+      { validators: this.passwordsMatch } // ✅ Attach the validator to the form group
+    );
   }
 
   // ✅ Custom Validator
@@ -67,7 +69,13 @@ private fb = inject(FormBuilder);
 
     const { firstName, lastName, email, password } = this.registerForm.value;
 
-    this.authService.registerUser({ firstName: firstName!, lastName: lastName!, email: email!, password: password!,})
+    this.authService
+      .registerUser({
+        firstName: firstName!,
+        lastName: lastName!,
+        email: email!,
+        password: password!,
+      })
       .subscribe({
         next: () => {
           this.isSubmitting = false;
@@ -76,7 +84,7 @@ private fb = inject(FormBuilder);
         error: (err) => {
           this.isSubmitting = false;
           this.errorMessage = err.message || 'Registration failed. Please try again.';
-        }
+        },
       });
   }
 

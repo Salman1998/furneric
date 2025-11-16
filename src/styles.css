@@ -1,2 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+
+@layer utilities {
+  @keyframes toastEnter {
+    0% {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-toast-enter {
+    animation: toastEnter 0.25s ease-out;
+  }
+}

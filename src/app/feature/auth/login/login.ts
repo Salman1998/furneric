@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoadingService } from '../../../core/services/loading.service';
+
+import { ToastService } from '../../../core/services/toast';
 
 @Component({
   selector: 'app-login',
@@ -19,48 +21,74 @@ export class Login {
   loading: boolean = false;
   rememberMe: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private loadingService: LoadingService,
+    private toast: ToastService
+  ) {}
 
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
 
-  onLogin() {
-    if (!this.email || !this.password) return;
-    // this.loading = true;
-    this.authService.login(this.email, this.password)
-    .subscribe({
-      next: () => {
-        // this.loading = false;
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        // this.loading = false;
-        console.error('Login failed:', err);
-        alert('Login failed. Please check your credentials.');
-      },
-    });
-  }
+async onLogin() {
+  this.loadingService.show();
 
-  async loginWithGoogle() {
-    const user = await this.authService.loginWithGoogle(this.rememberMe);
-    if (user) {
-      this.router.navigate(['/home'])
+  try {
+    if (!this.email || !this.password) {
+      this.toast.show('Email and Password are required', 'error');
+      return;
     }
+
+    const result = await this.authService.login(
+      this.email,
+      this.password,
+      this.rememberMe
+    );
+
+    if (result.success) {
+      this.toast.show('Login successfully!', 'success');
+      this.router.navigate(['/home']);
+    }else {
+    this.toast.show(result.error ?? 'Something went wrong', 'error');
   }
 
-  loginWithMicrosoft() {
-    this.loading = true;
-    this.authService.loginWithMicrosoft().subscribe({
-      next: () => {
-        this.loading = false;
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error('Microsoft login failed:', err);
-        alert('Microsoft login failed.');
-      },
-    });
+  } catch (error) {
+    console.error('Unexpected error in login:', error);
+    this.toast.show('Something went wrong. Try again.', 'error');
+
+  } finally {
+    this.loadingService.hide();
   }
+}
+
+
+
+async loginWithGoogle() {
+      this.loadingService.show();
+
+  try {
+    const result = await this.authService.loginWithGoogle(this.rememberMe);
+
+    if (result.success) {
+      this.toast.show('Login successfully!', 'success');
+      this.router.navigate(['/home']);
+    }else {
+    this.toast.show(result.error ?? 'Something went wrong', 'error');
+  }
+
+  } catch (error) {
+    console.error('Unexpected error in login:', error);
+    this.toast.show('Something went wrong. Try again.', 'error');
+
+  } finally {
+    this.loadingService.hide();
+  }
+}
+
+async loginWithMicrosoft() {
+  this.toast.show('Microsoft login is not available yet!', 'info')
+}
+  
 }
