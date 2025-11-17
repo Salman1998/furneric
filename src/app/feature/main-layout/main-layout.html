@@ -1,0 +1,43 @@
+<div class="app-container">
+    <app-header></app-header>
+
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- Sidebar Toggle Button -->
+      <button
+        (click)="isSidebarOpen = !isSidebarOpen"
+        class="sidebar-toggle lg:hidden"
+      >
+        <i class="fa-solid fa-list-ul"></i> 
+        <span class="ml-1">Explore categories</span>
+      </button>
+
+      <!-- Sidebar -->
+      <div
+        class="sidebar"
+        [ngClass]="{
+          'sidebar-open': isSidebarOpen,
+          'sidebar-closed': !isSidebarOpen
+        }"
+      >
+        <div class="sidebar-inner">
+          <app-sidebar></app-sidebar>
+        </div>
+      </div> 
+
+      <!-- Overlay -->
+      <div
+        *ngIf="isSidebarOpen"
+        class="sidebar-overlay" 
+        (click)="isSidebarOpen = false"
+      ></div>
+
+      <!-- Main Content -->
+      <div class="router-outlet-wrapper pr-4 wrap-anywhere">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </main>
+
+  <app-footer></app-footer>
+</div>

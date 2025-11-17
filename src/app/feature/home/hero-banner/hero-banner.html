@@ -1,0 +1,72 @@
+<div
+  role="region"
+  aria-live="polite"
+  class="relative h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] mb-8 overflow-hidden rounded-lg shadow-lg"
+  (mouseenter)="pauseAutoSlide()"
+  (mouseleave)="resumeAutoSlide()"
+>
+
+  <!-- Images -->
+    @for (img of bannerImages; track $index) {
+      <img
+        [src]="img"
+        [alt]="'Banner ' + ($index + 1)"
+        class="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000"
+        [class.opacity-100]="currentBannerIndex() == $index"
+        [class.opacity-0]="currentBannerIndex() != $index"
+      />
+    }
+
+  <!-- Gradient overlay -->
+  <div class="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent"></div>
+
+  <!-- Text content -->
+  <div class="absolute bottom-8 left-8 text-white z-10 animate-fade-in">
+    <h2 class="text-sm md:text-2xl font-bold mb-2">Shop the Latest</h2>
+    <button
+      class="px-4 py-2 bg-black/50 text-primary-foreground rounded-md text-sm md:text-base font-medium transition-all duration-300 hover:bg-black/90 hover:shadow-lg hover:scale-105 active:scale-95"
+    >
+      Explore
+    </button>
+  </div>
+
+  <!-- Prev / Next buttons -->
+  <div class="hidden lg:block">
+    <!-- Previous -->
+    <button
+      (click)="goToPreviousBanner()"
+      aria-label="Previous banner"
+      class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 backdrop-blur-sm p-3 rounded-full transition-all duration-300 hover:bg-white hover:shadow-lg hover:scale-110 active:scale-95 z-10"
+    >
+      <i class="fa-solid fa-chevron-left w-5 h-5 text-primary"></i>
+    </button>
+
+    <!-- Next -->
+    <button
+      (click)="goToNextBanner()"
+      aria-label="Next banner"
+      class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 backdrop-blur-sm p-3 rounded-full transition-all duration-300 hover:bg-white hover:shadow-lg hover:scale-110 active:scale-95 z-10"
+    >
+      <i class="fa-solid fa-chevron-right w-5 h-5 text-primary"></i>
+    </button>
+  </div>
+
+  <!-- Indicators -->
+  <div
+  class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10"
+>
+  @for (dot of bannerImages; track $index) {
+    <button
+      (click)="goToBanner($index)"
+      [aria-label]="'Go to banner ' + ($index + 1)"
+      class="h-2 rounded-full transition-all duration-300 hover:bg-white/75"
+      [class.w-6]="currentBannerIndex() == $index"
+      [class.bg-primary]="currentBannerIndex() == $index"
+      [class.w-2]="currentBannerIndex() != $index"
+      [class.bg-white/50]="currentBannerIndex() != $index"
+      [class.'hover:bg-white/75'] ="currentBannerIndex() !== $index"
+    ></button>
+  }
+</div>
+
+</div>

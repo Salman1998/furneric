@@ -1,0 +1,61 @@
+<div class="fixed top-0 left-0 h-auto w-80 bg-white overflow-hidden flex flex-col lg:relative" style="z-index: 998;">
+  <div class="flex-1 overflow-y-auto p-6 custom-scrollbar">
+    <h2 class="text-2xl font-bold mb-8 text-gray-900">Discover</h2>
+
+    <div class="space-y-2">
+      <div *ngFor="let group of filterGroups" class="border-b border-gray-100 last:border-b-0">
+        <button
+          (click)="toggleGroup(group)"
+          class="flex items-center justify-between w-full text-left font-semibold py-3 px-3 rounded-lg transition-all duration-200 hover:bg-gray-50 group">
+          <span class="text-gray-900 text-base">{{ group.title }}</span>
+          <i
+            [ngClass]="group.isOpen ? 'fa-chevron-up' : 'fa-chevron-down'"
+            class="fa text-gray-400 text-xs transition-transform duration-300 group-hover:text-gray-600"
+            [class.rotate-180]="group.isOpen"></i>
+        </button>
+
+        <div
+          class="overflow-hidden transition-all duration-300 ease-in-out"
+          [class.max-h-0]="!group.isOpen"
+          [class.max-h-96]="group.isOpen">
+          <ul class="pb-2">
+            <li
+              *ngFor="let item of group.items"
+              [routerLink]="['/', item.router]"
+              (click)="selectItem(group, item)"
+              class="flex items-center justify-between cursor-pointer text-sm py-2.5 px-3 ml-2 rounded-lg transition-all duration-200"
+              [ngClass]="{
+                'bg-blue-50': group.selected === item.name,
+                'hover:bg-gray-50': group.selected !== item.name
+              }">
+              <div class="flex items-center gap-3 flex-1 min-w-0">
+                <i
+                  [ngClass]="[
+                    item.icon,
+                    'text-base transition-colors duration-200',
+                    group.selected === item.name ? 'text-blue-600' : 'text-gray-500 hover:text-blue-500'
+                  ]"></i>
+                <span
+                  [ngClass]="{
+                    'transition-colors duration-200 truncate': true,
+                    'font-semibold text-blue-900': group.selected === item.name,
+                    'text-gray-700 hover:text-gray-900': group.selected !== item.name
+                  }">
+                  {{ item.name }}
+                </span>
+              </div>
+              <span
+                [ngClass]="{
+                  'text-xs px-2.5 py-1 rounded-full font-medium transition-all duration-200 shrink-0': true,
+                  'bg-blue-100 text-blue-700': group.selected === item.name,
+                  'bg-gray-100 text-gray-600 hover:bg-gray-200': group.selected !== item.name
+                }">
+                {{ item.count }}
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

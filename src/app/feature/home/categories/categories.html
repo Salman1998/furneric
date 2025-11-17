@@ -1,0 +1,41 @@
+<div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 mb-8">
+    @for (category of categories; track $index) {
+          <div
+    class="flex flex-col items-center group cursor-pointer"
+    (click)="onSelectCategory(category.title)"
+  >
+    <div
+      class="w-16 h-16 bg-muted rounded-full mb-2 shadow-md overflow-hidden
+             transition-all duration-300 group-hover:shadow-xl
+             group-hover:scale-110 active:scale-95"
+    >
+      <!-- If image failed -->
+        @if (imageErrors[category.title]) {
+        <div class="w-full h-full flex items-center justify-center bg-muted">
+            <span class="text-2xl">{{ category.title[0] }}</span>
+        </div>
+        }@else {
+        <!-- Image fallback logic -->
+            <ng-template #imgTemplate>
+              <img
+                class="rounded-full w-full h-full object-cover"
+                [src]="category.img"
+                [alt]="category.title"
+                (error)="onImageError(category)"
+              />
+            </ng-template>
+        }
+
+      
+    </div>
+
+    <button
+      class="text-sm focus:outline-none transition-colors duration-200
+             group-hover:text-primary font-medium"
+      [attr.aria-label]="'Category ' + category.title"
+    >
+      {{ category.title }}
+    </button>
+  </div>
+    }
+</div>

@@ -1,0 +1,114 @@
+/* Main container */
+.app-container {
+    position: relative;
+    min-height: 100vh;
+    background-color: white;
+  }
+  
+  /* Main content area */
+  .main-content {
+    padding-top: 78px;  
+    width: 100%;
+    position: relative;
+  }
+  
+  /* Content wrapper */
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  /* Sidebar toggle button */
+  .sidebar-toggle {
+    width: 200px;
+    margin: 1rem 0 1rem 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #f3f4f6;
+    transition: background-color 0.3s ease;
+  }
+  
+  .sidebar-toggle:hover {
+    background-color: #e5e7eb;
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    position: fixed;
+    top: 78px;
+    left: 0;
+    bottom: 0;
+    width: 320px;
+    background-color: white;
+    z-index: 801;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .sidebar-inner {
+    width: 100%;
+    height: auto;
+    position: sticky;
+    top: 78px;
+  }
+  
+  .sidebar-open {
+    transform: translateX(0);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .sidebar-closed {
+    transform: translateX(-100%);
+  }
+  
+  /* Sidebar overlay */
+  .sidebar-overlay {
+    position: fixed;
+    top: 78px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(1px);
+    z-index: 800;
+  }
+  
+  /* Router outlet wrapper */
+  .router-outlet-wrapper {
+    flex: 1;
+    padding-left: 1rem;
+    margin-top: 1rem;
+  }
+  
+  /* Responsive adjustments */
+  @media (min-width: 1024px) {
+    .content-wrapper {
+      flex-direction: row;
+    }
+    
+    .sidebar {
+      position: relative;
+      top: auto;
+      transform: translateX(0);
+      box-shadow: none;
+    }
+    
+    .sidebar-closed {
+      transform: translateX(0);
+    }
+    
+    .router-outlet-wrapper {
+      margin-top: 0.25rem;
+    }
+  }
+  
+  /* Scroll behavior fixes */
+  :host {
+    display: block;
+    overflow-anchor: none;
+  }
+  
+  .main-content {
+    overflow-anchor: none;
+    scroll-behavior: smooth;
+  }

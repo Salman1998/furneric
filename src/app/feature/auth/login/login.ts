@@ -63,8 +63,6 @@ async onLogin() {
   }
 }
 
-
-
 async loginWithGoogle() {
       this.loadingService.show();
 
